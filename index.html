@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>هذا حمار كبير</title>
+    <style>
+        /* Styles Généraux */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0f0c20;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Conteneur principal pour gérer les pages */
+        .container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* Pages de base */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px;
+        }
+
+        /* --- PAGE 1 : ACCUEIL --- */
+        #page-welcome {
+            background: radial-gradient(circle at center, #1e1233 0%, #0f0c20 100%);
+            z-index: 2;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(45deg, #ff416c, #ff4b2b, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        /* Bouton Moderne & Stylé */
+        .btn-modern {
+            position: relative;
+            padding: 16px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            outline: none;
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.6);
+            background: linear-gradient(90deg, #a855f7, #6366f1);
+        }
+
+        .btn-modern:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(168, 85, 247, 0.4);
+        }
+
+        /* --- PAGE 2 : VIDÉO --- */
+        #page-video {
+            background: #060409;
+            z-index: 1;
+            opacity: 0;
+            transform: scale(0.9) translateY(50px);
+            pointer-events: none;
+        }
+
+        /* Classe pour activer la transition vers la page vidéo */
+        #page-video.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+
+        /* Style du lecteur vidéo */
+        .video-wrapper {
+            width: 100%;
+            max-width: 400px; /* Format TikTok vertical */
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        /* Bouton Retour discret */
+        .btn-back {
+            margin-top: 20px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div id="page-welcome" class="page">
+            <h1 class="welcome-title">هل أنت مستعد لتلقي رسالة مهمة؟</h1>
+            <button class="btn-modern" id="enter-btn">اكتشف الفيديو</button>
+        </div>
+
+        <div id="page-video" class="page">
+            <div class="video-wrapper">
+                <video id="my-video" controls controlsList="nodownload">
+                    <source src="4222.mp4" type="video/mp4">
+                    Votre navigateur ne supporte pas la lecture de cette vidéo.
+                </video>
+            </div>
+            <button class="btn-back" id="back-btn">خلف</button>
+        </div>
+
+    </div>
+
+    <script>
+        const enterBtn = document.getElementById('enter-btn');
+        const backBtn = document.getElementById('back-btn');
+        const pageWelcome = document.getElementById('page-welcome');
+        const pageVideo = document.getElementById('page-video');
+        const video = document.getElementById('my-video');
+
+        // Animation quand on clique sur le bouton moderne
+        enterBtn.addEventListener('click', () => {
+            // Cache la page d'accueil avec une transition
+            pageWelcome.style.opacity = '0';
+            pageWelcome.style.transform = 'scale(1.1)';
+            pageWelcome.style.pointerEvents = 'none';
+
+            // Affiche la page vidéo
+            pageVideo.classList.add('active');
+
+            // Lance la vidéo automatiquement au changement de page
+            setTimeout(() => {
+                video.play().catch(error => {
+                    console.log("Lecture automatique bloquée par le navigateur, l'utilisateur doit cliquer sur play.");
+                });
+            }, 400); 
+        });
+
+        // Bouton retour pour réinitialiser
+        backBtn.addEventListener('click', () => {
+            video.pause();
+            video.currentTime = 0; // Remet la vidéo à zéro
+
+            pageVideo.classList.remove('active');
+            
+            pageWelcome.style.opacity = '1';
+            pageWelcome.style.transform = 'scale(1)';
+            pageWelcome.style.pointerEvents = 'auto';
+        });
+    </script>
+</body>
+</html>
